@@ -375,3 +375,110 @@ class AdminForm(FlaskForm):
         }
     )
 
+
+# 标签表单
+class TaobaoForm(FlaskForm):
+    # input
+    name = StringField(
+        label="物品名",
+        validators=[
+            DataRequired("需要抓取的标题名不能为空")
+        ],
+        description="物品名",
+        render_kw={
+            "class": "form-control",
+            "id": "input_name",
+            "placeholder": "请输入标签名称！"
+        }
+    )
+    num = StringField(
+        label="数目",
+        validators=[
+            DataRequired("需要抓取数目")
+        ],
+        description="数目",
+        render_kw={
+            "class": "form-control",
+            "id": "input_name2",
+            "placeholder": "请输入需要抓取的数目！"
+        }
+    )
+    # 按钮
+    submit = SubmitField(
+        '编辑',
+        render_kw={
+            "class": "btn btn-primary",
+        }
+    )
+
+
+# 淘宝详情表单
+class TaobaoDetailForm(FlaskForm):
+    # input
+    type_name = StringField(
+        label="关键字",
+        validators=[
+            DataRequired("关键字不能为空")
+        ],
+        description="关键字",
+        render_kw={
+            "class": "form-control",
+            "id": "input_name1",
+            "placeholder": "请输入关键字名称！"
+        }
+    )
+    id = StringField(
+        label="编号",
+        validators=[
+            DataRequired("编号")
+        ],
+        description="编号",
+        render_kw={
+            "class": "form-control disabled",
+            "id": "input_name2",
+            "placeholder": ""
+        }
+    )
+    zh_title = StringField(
+        label="中文标题",
+        validators=[
+            DataRequired("中文标题")
+        ],
+        description="中文标题",
+        render_kw={
+            "class": "form-control",
+            "id": "input_name3",
+            "placeholder": "请输入中文标题"
+        }
+    )
+    en_title = StringField(
+        label="英文标题",
+        validators=[
+            DataRequired("英文标题")
+        ],
+        description="英文标题",
+        render_kw={
+            "class": "form-control",
+            "id": "input_name4",
+            "placeholder": "请输入英文标题"
+        }
+    )
+    view_sales = StringField(
+        label="销量",
+        validators=[
+            DataRequired("销量")
+        ],
+        description="销量",
+        render_kw={
+            "class": "form-control",
+            "id": "input_name5",
+            "placeholder": "请输入销量"
+        }
+    )
+    # 按钮
+    submit = SubmitField(
+        '入库',
+        render_kw={
+            "class": "btn btn-primary",
+        }
+    )

@@ -6,20 +6,21 @@
 import datetime
 from app import db
 
-#  #
-#     # 初始化文件
+# #
+# # 初始化文件
 # from flask import Flask
 # from flask_sqlalchemy import SQLAlchemy
 # import pymysql
 #
 # app = Flask(__name__)
 #
-#     # 用于连接数据的数据库。
-# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:felixwang@127.0.0.1:3306/movie"
-#     # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:tp158917@127.0.0.1:3306/movie"
-#     # 如果设置成 True (默认情况)，Flask-SQLAlchemy 将会追踪对象的修改并且发送信号。
+# # 用于连接数据的数据库。
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:yinheark.com@127.0.0.1:3306/yinheark"
+# # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:tp158917@127.0.0.1:3306/movie"
+# # 如果设置成 True (默认情况)，Flask-SQLAlchemy 将会追踪对象的修改并且发送信号。
 # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 # db = SQLAlchemy(app)  # 创建数据库
+
 
 # 会员模型
 class User(db.Model):
@@ -218,28 +219,39 @@ class Oplog(db.Model):
         return "<Oplog %r>" % self.id
 
 
+
+class Taobao(db.Model):
+    # 定义表名
+    __tablename__ = 'taobao'
+    __table_args__ = {"useexisting": True}
+    id = db.Column(db.Integer, primary_key=True)  # 编号
+    addtime = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())  # 注册时间
+    type_name = db.Column(db.String(100))
+    zh_title = db.Column(db.String(255))
+    en_title = db.Column(db.String(255))
+    img_url = db.Column(db.String(255))
+    view_sales = db.Column(db.String(100))
+    detail_url = db.Column(db.String(255), unique=True)
+
+
 if __name__ == "__main__":
-
-
-
-
     db.create_all()
 
-    # 测试数据的插入
-
-    role = Role(
-        name="超级管理员",
-        auths=""
-    )
-    db.session.add(role)
-    db.session.commit()
-    from werkzeug.security import generate_password_hash
-
-    admin = Admin(
-        name="felix",
-        pwd=generate_password_hash("felix"),
-        is_super=0,
-        role_id=1
-    )
-    db.session.add(admin)
-    db.session.commit()
+    # # 测试数据的插入
+    #
+    # role = Role(
+    #     name="超级管理员",
+    #     auths=""
+    # )
+    # db.session.add(role)
+    # db.session.commit()
+    # from werkzeug.security import generate_password_hash
+    #
+    # admin = Admin(
+    #     name="felix",
+    #     pwd=generate_password_hash("felix"),
+    #     is_super=0,
+    #     role_id=1
+    # )
+    # db.session.add(admin)
+    # db.session.commit()

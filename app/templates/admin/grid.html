@@ -20,7 +20,7 @@
             <span>标签管理</span>
             <span class="label label-primary pull-right">2</span>
         </a>
-        <ul class="treeview-menu" >
+        <ul class="treeview-menu">
             <li id="g-2-1">
                 <a href="{{url_for('admin.tag_add')}}">
                     <i class="fa fa-circle-o"></i> 添加标签
@@ -190,6 +190,25 @@
             <li id="g-11-2">
                 <a href="{{url_for('admin.admin_list',page=1)}}">
                     <i class="fa fa-circle-o"></i> 管理员列表
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="treeview" id="g-12">
+        <a href="#">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+            <span>淘宝数据管理</span>
+            <span class="label label-primary pull-right">2</span>
+        </a>
+        <ul class="treeview-menu">
+            <li id="g-12-1">
+                <a href="{{url_for('admin.taobao_add')}}">
+                    <i class="fa fa-circle-o"></i> 开始抓取淘宝
+                </a>
+            </li>
+            <li id="g-12-2">
+                <a href="{{url_for('admin.taobao_list',page=1)}}">
+                    <i class="fa fa-circle-o"></i> 淘宝数据列表
                 </a>
             </li>
         </ul>

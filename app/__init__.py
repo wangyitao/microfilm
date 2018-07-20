@@ -3,28 +3,28 @@
 # @time   : 2018/7/9 21:49
 
 # 初始化文件
-from flask import Flask,render_template
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
 import os
 from flask_redis import FlaskRedis
+
 app = Flask(__name__)
 
 # 用于连接数据的数据库。
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:felixwang@127.0.0.1:3306/movie"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:yinheark.com@127.0.0.1:3306/yinheark"
 # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:tp158917@127.0.0.1:3306/movie"
 # 如果设置成 True (默认情况)，Flask-SQLAlchemy 将会追踪对象的修改并且发送信号。
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 # 文件上传路径
-app.config['UP_DIR']=os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads/')
+app.config['UP_DIR'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/uploads/')
 app.config["FC_DIR"] = os.path.join(os.path.abspath(os.path.dirname(__file__)), "static/uploads/users/")
 
-app.config["REDIS_URL"] = "redis://127.0.0.1:6379/0"
-
+app.config["REDIS_URL"] = "redis://127.0.0.1:6379/1"
 
 app.debug = True
-app.config['SECRET_KEY']='abcdefg'
+app.config['SECRET_KEY'] = 'abcdefg'
 
 db = SQLAlchemy(app)  # 创建数据库
 rd = FlaskRedis(app)

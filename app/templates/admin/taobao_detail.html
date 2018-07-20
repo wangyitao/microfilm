@@ -35,20 +35,23 @@
                         </div>
                         {% endfor %}
                         <div class="form-group">
-                            <label for="input_name">{{ form.name.label }}</label>
-                            {# <input type="text" class="form-control" id="input_name" placeholder="请输入标签名称！">#}
-                            {{ form.name(value=tag.name) }}
-                            {% for err in form.name.errors %}
-                            <div class="col-md-12">
-                                <p style="color: red">{{ err }}</p>
-                            </div>
-                            {% endfor %}
+                            <label for="input_name">编号</label>
+                            <div>{{taobao.id}}</div>
+                            <label for="input_name">关键字</label>
+                            <div>{{taobao.type_name}}</div>
+                            <label for="input_name">{{ form.zh_title.label }}</label>
+                            {{ form.zh_title(value=taobao.zh_title) }}
+                            <label for="input_name">{{ form.en_title.label }}</label>
+                            {{ form.zh_title(value=taobao.en_title) }}
+                            <label for="input_name">销量</label>
+                            {{ taobao.view_sales}}
+                            <br>
+                            <img src="{{taobao.img_url}}" style="width: 500px;height: 500px;">
+
+
                         </div>
                     </div>
                     <div class="box-footer">
-                        {#
-                        <button type="submit" class="btn btn-primary">添加</button>
-                        #}
                         {{ form.csrf_token }}
                         {{ form.submit }}
                     </div>
@@ -63,8 +66,8 @@
 {% block js %}
 <script>
     $(document).ready(function () {
-        $("#g-2").addClass("active");
-        $("#g-2-1").addClass("active");
+        $("#g-12").addClass("active");
+        $("#g-12-1").addClass("active");
     });
 </script>
 {% endblock %}

@@ -5,8 +5,8 @@
 # 视图处理文件
 from . import admin
 from flask import render_template, url_for, redirect, flash, session, request, abort
-from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm, PwdForm, AuthForm, RoleForm, AdminForm
-from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth, Role, UserLog, Oplog, Adminlog
+from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm, PwdForm, AuthForm, RoleForm, AdminForm,TaobaoDetailForm,TaobaoForm
+from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth, Role, UserLog, Oplog, Adminlog,Taobao
 from functools import wraps
 from app import db, app
 from werkzeug.utils import secure_filename
@@ -50,8 +50,9 @@ def admin_auth(f):
         auth_list = Auth.query.all()
         urls = [v.url for v in auth_list for val in auths if val == v.id]
         rule = request.url_rule
+        print(rule)
         if str(rule) not in urls:
-            # abort(404)
+            abort(404)
             return render_template('admin/login.html')
         return f(*args, **kwargs)
 
@@ -127,7 +128,7 @@ def logout():
 
 
 # 修改密码
-@admin.route("/pwd/", methods=["GET", "POST"])
+@admin.route("/pwd", methods=["GET", "POST"])
 @admin_login_req
 # @admin_auth
 def pwd():
@@ -213,7 +214,7 @@ def tag_edit(id=None):
 
 
 # 删除标签
-@admin.route("/tag/del/<int:id>/", methods=["GET"])
+@admin.route("/tag/del/<int:id>", methods=["GET"])
 @admin_login_req
 @admin_auth
 # @admin_auth
@@ -236,7 +237,7 @@ def change_filename(filename):
     return filename
 
 
-@admin.route("/movie/add/", methods=["GET", "POST"])
+@admin.route("/movie/add", methods=["GET", "POST"])
 @admin_login_req
 # @admin_auth
 def movie_add():
@@ -280,7 +281,7 @@ def movie_add():
     return render_template("admin/movie_add.html", form=form)
 
 
-@admin.route("/movie/edit/<int:id>/", methods=["GET", "POST"])
+@admin.route("/movie/edit/<int:id>", methods=["GET", "POST"])
 @admin_login_req
 # @admin_auth
 def movie_edit(id=None):
@@ -408,7 +409,7 @@ def preview_edit(id=None):
     return render_template("admin/preview_edit.html", form=form, preview=preview)
 
 
-@admin.route("/preview/list/<int:page>/", methods=["GET"])
+@admin.route("/preview/list/<int:page>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def preview_list(page=None):
@@ -423,7 +424,7 @@ def preview_list(page=None):
     return render_template("admin/preview_list.html", page_data=page_data)
 
 
-@admin.route("/preview/del/<int:id>/", methods=["GET"])
+@admin.route("/preview/del/<int:id>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def preview_del(id=None):
@@ -434,8 +435,9 @@ def preview_del(id=None):
     return redirect(url_for('admin.preview_list', page=1))
 
 
-@admin.route('/user/list/<int:page>/', methods=['GET'])
+@admin.route('/user/list/<int:page>', methods=['GET'])
 @admin_login_req
+# @admin_auth
 def user_list(page=None):
     if page is None:
         page = 1
@@ -446,7 +448,7 @@ def user_list(page=None):
     return render_template("admin/user_list.html", page_data=page_data)
 
 
-@admin.route("/user/view/<int:id>/", methods=["GET"])
+@admin.route("/user/view/<int:id>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def user_view(id=None):
@@ -460,7 +462,7 @@ def user_view(id=None):
     return render_template("admin/user_view.html", user=user, from_page=from_page)
 
 
-@admin.route("/user/del/<int:id>/", methods=["GET"])
+@admin.route("/user/del/<int:id>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def user_del(id=None):
@@ -479,7 +481,7 @@ def user_del(id=None):
     return redirect(url_for('admin.user_list', page=from_page))
 
 
-@admin.route("/comment/list/<int:page>/", methods=["GET"])
+@admin.route("/comment/list/<int:page>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def comment_list(page=None):
@@ -503,7 +505,7 @@ def comment_list(page=None):
     return render_template("admin/comment_list.html", page_data=page_data)
 
 
-@admin.route("/comment/del/<int:id>/", methods=["GET"])
+@admin.route("/comment/del/<int:id>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def comment_del(id=None):
@@ -522,7 +524,7 @@ def comment_del(id=None):
     return redirect(url_for('admin.comment_list', page=from_page))
 
 
-@admin.route("/moviecol/list/<int:page>/", methods=["GET"])
+@admin.route("/moviecol/list/<int:page>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def moviecol_list(page=None):
@@ -544,7 +546,7 @@ def moviecol_list(page=None):
     return render_template("admin/moviecol_list.html", page_data=page_data)
 
 
-@admin.route("/moviecol/del/<int:id>/", methods=["GET"])
+@admin.route("/moviecol/del/<int:id>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def moviecol_del(id=None):
@@ -563,7 +565,7 @@ def moviecol_del(id=None):
     return redirect(url_for('admin.moviecol_list', page=from_page))
 
 
-@admin.route("/oplog/list/<int:page>/", methods=["GET"])
+@admin.route("/oplog/list/<int:page>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def oplog_list(page=None):
@@ -582,7 +584,7 @@ def oplog_list(page=None):
     return render_template("admin/oplog_list.html", page_data=page_data)
 
 
-@admin.route("/adminloginlog/list/<int:page>/", methods=["GET"])
+@admin.route("/adminloginlog/list/<int:page>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def adminloginlog_list(page=None):
@@ -597,11 +599,11 @@ def adminloginlog_list(page=None):
         Admin.id == Adminlog.admin_id,
     ).order_by(
         Adminlog.addtime.desc()
-    ).paginate(page=page, per_page=1)
+    ).paginate(page=page, per_page=10)
     return render_template("admin/adminloginlog_list.html", page_data=page_data)
 
 
-@admin.route("/userloginlog/list/<int:page>/", methods=["GET"])
+@admin.route("/userloginlog/list/<int:page>", methods=["GET"])
 @admin_login_req
 # @admin_auth
 def userloginlog_list(page=None):
@@ -616,14 +618,14 @@ def userloginlog_list(page=None):
         User.id == UserLog.user_id,
     ).order_by(
         UserLog.addtime.desc()
-    ).paginate(page=page, per_page=2)
+    ).paginate(page=page, per_page=10)
     return render_template("admin/userloginlog_list.html", page_data=page_data)
 
 
 # 角色添加
-@admin.route("/role/add/", methods=["GET", "POST"])
+@admin.route("/role/add", methods=["GET", "POST"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def role_add():
     """
     角色添加
@@ -643,9 +645,9 @@ def role_add():
 
 
 # 角色列表
-@admin.route("/role/list/<int:page>/", methods=["GET"])
+@admin.route("/role/list/<int:page>", methods=["GET"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def role_list(page=None):
     """
     角色列表
@@ -658,9 +660,9 @@ def role_list(page=None):
     return render_template("admin/role_list.html", page_data=page_data)
 
 
-@admin.route("/role/del/<int:id>/", methods=["GET"])
+@admin.route("/role/del/<int:id>", methods=["GET"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def role_del(id=None):
     """
     删除角色
@@ -672,9 +674,9 @@ def role_del(id=None):
     return redirect(url_for('admin.role_list', page=1))
 
 
-@admin.route("/role/edit/<int:id>/", methods=["GET", "POST"])
+@admin.route("/role/edit/<int:id>", methods=["GET", "POST"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def role_edit(id=None):
     """
      编辑角色
@@ -697,6 +699,7 @@ def role_edit(id=None):
 
 @admin.route('/auth/add', methods=['GET', 'POST'])
 @admin_login_req
+@admin_auth
 def auth_add():
     """
         添加权限
@@ -714,9 +717,9 @@ def auth_add():
     return render_template("admin/auth_add.html", form=form)
 
 
-@admin.route("/auth/list/<int:page>/", methods=["GET"])
+@admin.route("/auth/list/<int:page>", methods=["GET"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def auth_list(page=None):
     """
     权限列表
@@ -725,14 +728,14 @@ def auth_list(page=None):
         page = 1
     page_data = Auth.query.order_by(
         Auth.addtime.desc()
-    ).paginate(page=page, per_page=2)
+    ).paginate(page=page, per_page=10)
     return render_template("admin/auth_list.html", page_data=page_data)
 
 
 # 删除权限
-@admin.route("/auth/del/<int:id>/", methods=["GET"])
+@admin.route("/auth/del/<int:id>", methods=["GET"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def auth_del(id=None):
     """
     权限删除
@@ -744,9 +747,9 @@ def auth_del(id=None):
     return redirect(url_for('admin.auth_list', page=1))
 
 
-@admin.route("/auth/edit/<int:id>/", methods=["GET", "POST"])
+@admin.route("/auth/edit/<int:id>", methods=["GET", "POST"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def auth_edit(id=None):
     """
     编辑权限
@@ -765,9 +768,9 @@ def auth_edit(id=None):
 
 
 # 添加管理员
-@admin.route("/admin/add/", methods=["GET", "POST"])
+@admin.route("/admin/add", methods=["GET", "POST"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def admin_add():
     """
     添加管理员
@@ -791,7 +794,7 @@ def admin_add():
 # 管理员列表
 @admin.route("/admin/list/<int:page>", methods=["GET"])
 @admin_login_req
-# @admin_auth
+@admin_auth
 def admin_list(page=None):
     """
     管理员列表
@@ -806,3 +809,52 @@ def admin_list(page=None):
         Admin.addtime.desc()
     ).paginate(page=page, per_page=2)
     return render_template("admin/admin_list.html", page_data=page_data)
+
+
+
+
+# 标签列表
+@admin.route('/taobao/list/<int:page>', methods=['GET'])  # 传入整型页码
+@admin_login_req
+def taobao_list(page=None):
+    if page is None:
+        page = 1
+    page_data = Taobao.query.order_by(  # 查询并按照时间排序
+        Taobao.addtime.desc()
+    ).paginate(page=page, per_page=10)  # 分页操作,默认10页显示一条
+
+    return render_template("admin/taobao_list.html", page_data=page_data)
+
+
+# 添加标签
+@admin.route('/taobao/add', methods=['GET', 'POST'])
+@admin_login_req
+def taobao_add():
+    form = TaobaoForm()
+    if form.validate_on_submit():
+        data = form.data
+
+        from app.util.get_taobao_dict import start_get_taobao
+        # # 数据库查询
+        # tag = Tag.query.filter_by(name=data['name']).count()
+        # if tag == 1:
+        #     flash("名称已经存在！", category='err')
+        #     return redirect(url_for('admin.tag_add'))
+        # 入库操作
+        import threading
+        thr=threading.Thread(target=start_get_taobao,args=(data['name'],int(data['num']),))
+        thr.start()
+
+        flash('开始爬取成功！', category='ok')
+        redirect(url_for('admin.taobao_add'))
+    return render_template("admin/taobao_add.html", form=form)
+
+
+# 添加标签
+@admin.route('/taobao/detail/<int:id>', methods=['GET', 'POST'])
+@admin_login_req
+def taobao_detail(id=None):
+    form = TaobaoDetailForm()
+    taobao = Taobao.query.get_or_404(id)
+
+    return render_template("admin/taobao_detail.html", form=form,taobao=taobao)
