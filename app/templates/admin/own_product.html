@@ -35,16 +35,27 @@
                         </div>
                         {% endfor %}
                         <div class="form-group">
-                            <label for="input_name">编号</label>
+                            <label for="input_name">产品名称</label>
                             <div>{{taobao.id}}</div>
-                            <label for="input_name">关键字</label>
+                            <label for="input_name">产品描述</label>
                             <div>{{taobao.type_name}}</div>
-                            <label for="input_name">{{ form.zh_title.label }}</label>
+                            <label for="input_name">产品标签</label>
                             {{ form.zh_title(value=taobao.zh_title) }}
-                            <label for="input_name">{{ form.en_title.label }}</label>
+                            <label for="input_name">产品sku</label>
                             {{ form.en_title(value=taobao.en_title) }}
-                            <label for="input_name">销量</label>
+                            <label for="input_name">产品库存</label>
                             {{ taobao.view_sales}}
+                            <label for="input_name">产品价格</label>
+                            <div>{{taobao.type_name}}</div>
+                            <label for="input_name">产品描述</label>
+                            <div>{{taobao.type_name}}</div>
+                            <label for="input_name">产品运费</label>
+                            <div>{{taobao.type_name}}</div>
+                            <label for="input_name">产品描述</label>
+                            <div>{{taobao.type_name}}</div>
+                            <label for="input_name">父类sku</label>
+                            <div>{{taobao.type_name}}</div>
+
                             <br>
                             <img src="{{taobao.img_url}}" style="width: 500px;height: 500px;">
                         </div>

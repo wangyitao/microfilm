@@ -6,7 +6,7 @@
 from . import admin
 from flask import render_template, url_for, redirect, flash, session, request, abort
 from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm, PwdForm, AuthForm, RoleForm, AdminForm,TaobaoDetailForm,TaobaoForm
-from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth, Role, UserLog, Oplog, Adminlog,Taobao
+from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth, Role, UserLog, Oplog, Adminlog,Taobao,usefulTaobao
 from functools import wraps
 from app import db, app
 from werkzeug.utils import secure_filename
@@ -825,6 +825,16 @@ def taobao_list(page=None):
 
     return render_template("admin/taobao_list.html", page_data=page_data)
 
+@admin.route('/taobao_ruku/list/<int:page>', methods=['GET'])  # 传入整型页码
+@admin_login_req
+def taobao_ruku_list(page=None):
+    if page is None:
+        page = 1
+    page_data = usefulTaobao.query.order_by(  # 查询并按照时间排序
+        usefulTaobao.addtime.desc()
+    ).paginate(page=page, per_page=10)  # 分页操作,默认10页显示一条
+
+    return render_template("admin/taobao_ruku_list.html", page_data=page_data)
 
 # 添加标签
 @admin.route('/taobao/add', methods=['GET', 'POST'])
@@ -856,5 +866,31 @@ def taobao_add():
 def taobao_detail(id=None):
     form = TaobaoDetailForm()
     taobao = Taobao.query.get_or_404(id)
-
+    if form.validate_on_submit():
+        data=form.data
+        useful_taobao=usefulTaobao(
+            type_name=taobao.type_name,
+            zh_title=data['zh_title'],
+            en_title=data['en_title'],
+            img_url=taobao.img_url,
+            view_sales=taobao.view_sales,
+            detail_url=taobao.detail_url,
+            taobao_id=taobao.id
+        )
+        db.session.add(useful_taobao)
+        db.session.commit()
+        flash("入库成功！", "ok")
     return render_template("admin/taobao_detail.html", form=form,taobao=taobao)
+
+@admin.route("/taobao/del/<int:id>", methods=["GET"])
+@admin_login_req
+# @admin_auth
+def taobao_del(id=None):
+    """
+    淘宝数据删除
+    """
+    taobao = Taobao.query.filter_by(id=id).first_or_404()
+    db.session.delete(taobao)
+    db.session.commit()
+    flash("删除数据成功！", "ok")
+    return redirect(url_for('admin.taobao_list', page=1))

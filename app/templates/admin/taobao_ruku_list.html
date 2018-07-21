@@ -59,9 +59,9 @@
                             <td>{{v.view_sales}}</td>
                             <td>{{v.addtime}}</td>
                             <td>
-                                <a href="{{url_for('admin.taobao_detail',id=v.id)}}" class="label label-success">详情</a>
+                                <a href="#" class="label label-success">详情</a>
                                 &nbsp;
-                                <a href="{{url_for('admin.taobao_del',id=v.id)}}" class="label label-danger">删除</a>
+                                <a href="#" class="label label-danger">删除</a>
                             </td>
                         </tr>
                         {%endfor%}
@@ -69,7 +69,7 @@
                     </table>
                 </div>
                 <div class="box-footer clearfix">
-                    {{pg.page(page_data,'admin.taobao_list')}}
+                    {{pg.page(page_data,'admin.taobao_ruku_list')}}
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
 <script>
     $(document).ready(function () {
         $("#g-12").addClass("active");
-        $("#g-12-2").addClass("active");
+        $("#g-12-3").addClass("active");
     });
 </script>
 {%endblock%}

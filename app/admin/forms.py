@@ -415,30 +415,30 @@ class TaobaoForm(FlaskForm):
 # 淘宝详情表单
 class TaobaoDetailForm(FlaskForm):
     # input
-    type_name = StringField(
-        label="关键字",
-        validators=[
-            DataRequired("关键字不能为空")
-        ],
-        description="关键字",
-        render_kw={
-            "class": "form-control",
-            "id": "input_name1",
-            "placeholder": "请输入关键字名称！"
-        }
-    )
-    id = StringField(
-        label="编号",
-        validators=[
-            DataRequired("编号")
-        ],
-        description="编号",
-        render_kw={
-            "class": "form-control disabled",
-            "id": "input_name2",
-            "placeholder": ""
-        }
-    )
+    # type_name = StringField(
+    #     label="关键字",
+    #     validators=[
+    #         DataRequired("关键字不能为空")
+    #     ],
+    #     description="关键字",
+    #     render_kw={
+    #         "class": "form-control",
+    #         "id": "input_name1",
+    #         "placeholder": "请输入关键字名称！"
+    #     }
+    # )
+    # id = StringField(
+    #     label="编号",
+    #     validators=[
+    #         DataRequired("编号")
+    #     ],
+    #     description="编号",
+    #     render_kw={
+    #         "class": "form-control disabled",
+    #         "id": "input_name2",
+    #         "placeholder": ""
+    #     }
+    # )
     zh_title = StringField(
         label="中文标题",
         validators=[
@@ -463,22 +463,87 @@ class TaobaoDetailForm(FlaskForm):
             "placeholder": "请输入英文标题"
         }
     )
-    view_sales = StringField(
-        label="销量",
-        validators=[
-            DataRequired("销量")
-        ],
-        description="销量",
-        render_kw={
-            "class": "form-control",
-            "id": "input_name5",
-            "placeholder": "请输入销量"
-        }
-    )
+    # view_sales = StringField(
+    #     label="销量",
+    #     validators=[
+    #         DataRequired("销量")
+    #     ],
+    #     description="销量",
+    #     render_kw={
+    #         "class": "form-control",
+    #         "id": "input_name5",
+    #         "placeholder": "请输入销量"
+    #     }
+    # )
     # 按钮
     submit = SubmitField(
         '入库',
         render_kw={
             "class": "btn btn-primary",
+        }
+    )
+
+
+class WishForm(FlaskForm):
+    ParentSKU=StringField(
+        label="ParentSKU",
+        validators=[
+            DataRequired("ParentSKU")
+        ],
+        description="ParentSKU",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "可接受BG00003GG"
+        }
+    )
+    product_title=StringField(
+        label="产品标题",
+        validators=[
+            DataRequired("产品标题")
+        ],
+        description="产品标题",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "可接受Nikon D5100 DSLR Camera (Body Only) USA MODEL"
+        }
+    )
+
+    descript = TextAreaField(
+        label="产品描述",
+        validators=[
+            DataRequired("简介不能为空！")
+        ],
+        description="产品描述",
+        render_kw={
+            "class": "form-control",
+            "rows": 10,
+            "placeholder": "可接受Nikon D5100 DSLR Camera (Body Only) USA MODEL"
+
+        }
+    )
+    tags=StringField(
+        label="产品标签",
+        validators=[
+            DataRequired("产品标签")
+        ],
+        description="产品标签",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "输入标签名"
+        }
+    )
+    inventory=StringField(
+        label="产品库存",
+        validators=[
+            DataRequired("产品库存")
+        ],
+        description="产品库存",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "输入产品库存"
         }
     )

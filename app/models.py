@@ -4,9 +4,11 @@
 
 # 操作数据库模块
 import datetime
+
 from app import db
 
-# #
+
+#
 # # 初始化文件
 # from flask import Flask
 # from flask_sqlalchemy import SQLAlchemy
@@ -219,7 +221,6 @@ class Oplog(db.Model):
         return "<Oplog %r>" % self.id
 
 
-
 class Taobao(db.Model):
     # 定义表名
     __tablename__ = 'taobao'
@@ -232,6 +233,23 @@ class Taobao(db.Model):
     img_url = db.Column(db.String(255))
     view_sales = db.Column(db.String(100))
     detail_url = db.Column(db.String(255), unique=True)
+
+    useful_taobao = db.relationship("usefulTaobao", backref='taobao')
+
+
+class usefulTaobao(db.Model):
+    # 定义表名
+    __tablename__ = 'usefultaobao'
+    __table_args__ = {"useexisting": True}
+    id = db.Column(db.Integer, primary_key=True)  # 编号
+    addtime = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())  # 注册时间
+    type_name = db.Column(db.String(100))
+    zh_title = db.Column(db.String(255))
+    en_title = db.Column(db.String(255))
+    img_url = db.Column(db.String(255))
+    view_sales = db.Column(db.String(100))
+    detail_url = db.Column(db.String(255), unique=True)
+    taobao_id = db.Column(db.Integer, db.ForeignKey('taobao.id'))
 
 
 if __name__ == "__main__":
