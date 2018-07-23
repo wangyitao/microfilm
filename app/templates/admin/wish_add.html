@@ -1,0 +1,166 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+<!--内容-->
+<section class="content-header">
+    <h1>银河方舟管理系统</h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> wish操作</a></li>
+        <li class="active">产品信息</li>
+    </ol>
+</section>
+<section class="content" id="showcontent">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">产品信息</h3>
+                </div>
+                <form role="form" method="post">
+                    <div class="box-body">
+                        {% for msg in get_flashed_messages(category_filter=["ok"]) %}
+                        <div class="alert alert-success alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            <h4><i class="icon fa fa-check"></i> 操作成功</h4>
+                            {{ msg }}
+                        </div>
+                        {% endfor %}
+                        {% for msg in get_flashed_messages(category_filter=["err"]) %}
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×
+                            </button>
+                            <h4><i class="icon fa fa-ban"></i> 操作失败</h4>
+                            {{ msg }}
+                        </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <label for="input_name">{{form.name.label}}<span><span style="color:red" onclick="replaceStr()">一键首字母大写</span></span></label>
+                            <div>{{form.name}}</div>
+
+                            <label for="input_name">{{form.sku.label}}<span><span style="color:red" onclick="Showsku()">一键生成sku</span></span></label>
+                            <div>{{form.sku}}</div>
+
+
+                            <label for="input_name">{{form.parent_sku.label}}</label>
+                            <div>{{form.parent_sku}}</div>
+                            <label for="input_name">{{form.price.label}}</label>
+                            <div>{{form.price}}</div>
+                            <label for="input_name">{{form.description.label}}</label>
+                            <div>{{form.description}}</div>
+                            <label for="input_name">{{form.tags.label}}</label>
+                            <div>{{form.tags}}</div>
+                            <label for="input_name">{{form.inventory.label}}</label>
+                            <div>{{form.inventory}}</div>
+                            <label for="input_name">{{form.shipping.label}}</label>
+                            <div>{{form.shipping}}</div>
+
+                            <label for="input_name">{{form.shipping_time.label}}</label>
+                            <div>{{form.shipping_time}}</div>
+                            <label for="input_name">{{form.color.label}}</label>
+                            <div>{{form.color}}</div>
+                            <label for="input_name">{{form.size.label}}</label>
+                            <div>{{form.size}}</div>
+
+                            <label for="input_name">{{form.main_image.label}}
+                                <span><span style="color:red" onclick="ShowImg()">预览图片</span></span>
+                            </label>
+                            <div>{{form.main_image}}</div>
+                            <div id="main_img_ul"></div>
+
+                            <label for="input_name">{{form.extra_images.label}}
+                                <span><span style="color:red" onclick="ShowImg2()">预览图片</span></span>
+                            </label>
+                            <div>{{form.extra_images}}</div>
+                            <div id="extra_img_ul"></div>
+
+
+                        </div>
+
+                    </div>
+                    <div></div>
+            </div>
+            <div class="box-footer">
+                {{ form.csrf_token }}
+                {{ form.submit }}
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+<!--内容-->
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function () {
+        $("#g-13").addClass("active");
+        $("#g-13-1").addClass("active");
+    });
+
+    function ShowImg() {
+        var url = document.getElementById("main_img").value;
+        var count = $("#main_img_ul img").length;
+        if (count >= 1) {
+            $("#main_img_ul img").attr('src', url);
+        } else {
+            var img = $("<img>"); //创建td标签
+            img.attr('src', url); //设置标签属性aa=‘td_aa’
+            //img.html('哈哈哈哈'); //设置td标签文本值为'哈哈哈哈'
+            $("#main_img_ul").append(img); //将新创建的td标签插到id为tr_id1的标签中
+
+        }
+    }
+
+    function Showsku() {
+        var ParentSKU = document.getElementById("ParentSKU").value;
+        var size = document.getElementById("pro_size").value;
+        var color = document.getElementById("pro_color").value.split(',');
+        var sku = ParentSKU + "-" + size;
+        for (i = 0; i < color.length; i++) {
+            sku = sku + "-" + color[i]
+        }
+        $("#pro_sku").val(sku);
+    }
+
+    function replaceStr() {
+        var str=document.getElementById("pro_name").value;
+        var strTemp = ""; //新字符串
+        for (var i = 0; i < str.length; i++) {
+            if (i == 0) {
+                strTemp += str[i].toUpperCase(); //第一个
+                continue;
+            }
+            if (str[i] == " " && i < str.length - 1) { //空格后
+                strTemp += " ";
+                strTemp += str[i + 1].toUpperCase();
+                i++;
+                continue;
+            }
+            strTemp += str[i];
+        }
+
+        $("#pro_name").val(strTemp);
+    }
+
+    function ShowImg2() {
+        var url = document.getElementById("extra_img").value;
+        var data = url.split('|');
+        var data_count = data.length;
+        var elem = document.getElementById("extra_img_ul");
+        while (elem.lastChild) //当div下还存在最后的子节点时 循环继续</span><span style="font-size:14px;">
+        {
+            elem.removeChild(elem.lastChild);
+        }
+        for (i = 0; i < data_count; i++) {
+            var img = $("<img>"); //创建td标签
+            img.attr('src', data[i]); //设置标签属性aa=‘td_aa’
+            //img.html('哈哈哈哈'); //设置td标签文本值为'哈哈哈哈'
+            $("#extra_img_ul").append(img); //将新创建的td标签插到id为tr_id1的标签中
+        }
+    }
+
+
+</script>
+{% endblock %}

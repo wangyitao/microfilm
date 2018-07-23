@@ -5,10 +5,11 @@
 # 表单处理文件
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, \
+from wtforms import FloatField, StringField, PasswordField, SubmitField, TextAreaField, FileField, SelectField, \
     SelectMultipleField  # 导入需要的字段
-from wtforms.validators import DataRequired, ValidationError,EqualTo
-from app.models import Admin, Tag,Auth,Role
+from wtforms.validators import DataRequired, ValidationError, EqualTo
+
+from app.models import Admin, Tag, Auth, Role
 
 
 # 登录表单
@@ -485,7 +486,31 @@ class TaobaoDetailForm(FlaskForm):
 
 
 class WishForm(FlaskForm):
-    ParentSKU=StringField(
+    # name = StringField(
+    #     label="产品名称",
+    #     validators=[
+    #         DataRequired("产品名称")
+    #     ],
+    #     description="产品名称",
+    #     render_kw={
+    #         "class": "form-control",
+    #         # "id": "input_name4",
+    #         "placeholder": "可接受BG00003GG"
+    #     }
+    # )
+    sku = StringField(
+        label="SKU",
+        validators=[
+            DataRequired("SKU")
+        ],
+        description="SKU",
+        render_kw={
+            "class": "form-control",
+            "id": "pro_sku",
+            "placeholder": "可接受BG00003GG"
+        }
+    )
+    parent_sku = StringField(
         label="ParentSKU",
         validators=[
             DataRequired("ParentSKU")
@@ -493,11 +518,11 @@ class WishForm(FlaskForm):
         description="ParentSKU",
         render_kw={
             "class": "form-control",
-            # "id": "input_name4",
+            "id": "ParentSKU",
             "placeholder": "可接受BG00003GG"
         }
     )
-    product_title=StringField(
+    name = StringField(
         label="产品标题",
         validators=[
             DataRequired("产品标题")
@@ -505,12 +530,12 @@ class WishForm(FlaskForm):
         description="产品标题",
         render_kw={
             "class": "form-control",
-            # "id": "input_name4",
+            "id": "pro_name",
             "placeholder": "可接受Nikon D5100 DSLR Camera (Body Only) USA MODEL"
         }
     )
 
-    descript = TextAreaField(
+    description = TextAreaField(
         label="产品描述",
         validators=[
             DataRequired("简介不能为空！")
@@ -523,7 +548,7 @@ class WishForm(FlaskForm):
 
         }
     )
-    tags=StringField(
+    tags = StringField(
         label="产品标签",
         validators=[
             DataRequired("产品标签")
@@ -535,7 +560,7 @@ class WishForm(FlaskForm):
             "placeholder": "输入标签名"
         }
     )
-    inventory=StringField(
+    inventory = StringField(
         label="产品库存",
         validators=[
             DataRequired("产品库存")
@@ -545,5 +570,95 @@ class WishForm(FlaskForm):
             "class": "form-control",
             # "id": "input_name4",
             "placeholder": "输入产品库存"
+        }
+    )
+    shipping = FloatField(
+        label="产品运费",
+        validators=[
+            DataRequired("产品运费")
+        ],
+        description="产品运费",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "输入产品运费"
+        }
+    )
+    price = FloatField(
+        label="产品价格",
+        validators=[
+            DataRequired("产品价格")
+        ],
+        description="产品价格",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "输入产品价格"
+        }
+    )
+    main_image= StringField(
+        label="主图地址",
+        validators=[
+            DataRequired("主图地址")
+        ],
+        description="主图地址",
+        render_kw={
+            "class": "form-control",
+            "id": "main_img",
+            "placeholder": "输入主图地址"
+        }
+    )
+    extra_images=StringField(
+        label="附图地址",
+        validators=[
+            DataRequired("附图地址")
+        ],
+        description="附图地址",
+        render_kw={
+            "class": "form-control",
+            "id": "extra_img",
+            "placeholder": "输入附图地址，多张附图用|隔开"
+        }
+    )
+    shipping_time=StringField(
+        label="运送时间",
+        validators=[
+            DataRequired("运送时间")
+        ],
+        description="运送时间",
+        render_kw={
+            "class": "form-control",
+            # "id": "extra_img",
+            "placeholder": "输入运送时间，例如：5-10"
+        }
+    )
+    color=StringField(
+        label="产品颜色",
+        validators=[
+            DataRequired("产品颜色")
+        ],
+        description="产品颜色",
+        render_kw={
+            "class": "form-control",
+            "id": "pro_color",
+            "placeholder": "输入产品颜色，例如：red,blue,green  用英文输入法下的,隔开"
+        }
+    )
+    size=StringField(
+        label="产品尺寸",
+        validators=[
+            DataRequired("产品尺寸")
+        ],
+        description="产品尺寸",
+        render_kw={
+            "class": "form-control",
+            "id": "pro_size",
+            "placeholder": "输入产品颜色，例如：Large, Medium, Small, 5, 6, 7.5  用英文输入法下的,隔开"
+        }
+    )
+    submit = SubmitField(
+        '上传产品',
+        render_kw={
+            "class": "btn btn-primary",
         }
     )

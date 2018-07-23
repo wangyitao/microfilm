@@ -2,18 +2,22 @@
 # @Author : Felix Wang
 # @time   : 2018/7/9 21:51
 
+import datetime
+import os
+import stat
+import uuid
+from functools import wraps
+
+from flask import render_template, url_for, redirect, flash, session, request, abort
+from werkzeug.utils import secure_filename
+
+from app import db, app
+from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm, PwdForm, AuthForm, RoleForm, AdminForm, \
+    TaobaoDetailForm, TaobaoForm, WishForm
+from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth, Role, UserLog, Oplog, Adminlog, \
+    Taobao, usefulTaobao
 # 视图处理文件
 from . import admin
-from flask import render_template, url_for, redirect, flash, session, request, abort
-from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm, PwdForm, AuthForm, RoleForm, AdminForm,TaobaoDetailForm,TaobaoForm
-from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth, Role, UserLog, Oplog, Adminlog,Taobao,usefulTaobao
-from functools import wraps
-from app import db, app
-from werkzeug.utils import secure_filename
-import os
-import uuid
-import datetime
-import stat
 
 
 # 装饰器做登录验证
@@ -77,14 +81,13 @@ def login():
             flash('密码错误！', 'err')
             return redirect(url_for('admin.login'))
         session['admin'] = data['account']
-        session['admin_id']=admin.id
+        session['admin_id'] = admin.id
         adminlog = Adminlog(
             admin_id=admin.id,
-            ip=request.remote_addr, # 获取访问ip
+            ip=request.remote_addr,  # 获取访问ip
         )
         db.session.add(adminlog)
         db.session.commit()
-
 
         return redirect(request.args.get('next') or url_for('admin.index'))
     return render_template("admin/login.html", form=form)
@@ -811,8 +814,6 @@ def admin_list(page=None):
     return render_template("admin/admin_list.html", page_data=page_data)
 
 
-
-
 # 标签列表
 @admin.route('/taobao/list/<int:page>', methods=['GET'])  # 传入整型页码
 @admin_login_req
@@ -825,6 +826,7 @@ def taobao_list(page=None):
 
     return render_template("admin/taobao_list.html", page_data=page_data)
 
+
 @admin.route('/taobao_ruku/list/<int:page>', methods=['GET'])  # 传入整型页码
 @admin_login_req
 def taobao_ruku_list(page=None):
@@ -835,6 +837,7 @@ def taobao_ruku_list(page=None):
     ).paginate(page=page, per_page=10)  # 分页操作,默认10页显示一条
 
     return render_template("admin/taobao_ruku_list.html", page_data=page_data)
+
 
 # 添加标签
 @admin.route('/taobao/add', methods=['GET', 'POST'])
@@ -852,7 +855,7 @@ def taobao_add():
         #     return redirect(url_for('admin.tag_add'))
         # 入库操作
         import threading
-        thr=threading.Thread(target=start_get_taobao,args=(data['name'],int(data['num']),))
+        thr = threading.Thread(target=start_get_taobao, args=(data['name'], int(data['num']),))
         thr.start()
 
         flash('开始爬取成功！', category='ok')
@@ -867,8 +870,8 @@ def taobao_detail(id=None):
     form = TaobaoDetailForm()
     taobao = Taobao.query.get_or_404(id)
     if form.validate_on_submit():
-        data=form.data
-        useful_taobao=usefulTaobao(
+        data = form.data
+        useful_taobao = usefulTaobao(
             type_name=taobao.type_name,
             zh_title=data['zh_title'],
             en_title=data['en_title'],
@@ -880,7 +883,8 @@ def taobao_detail(id=None):
         db.session.add(useful_taobao)
         db.session.commit()
         flash("入库成功！", "ok")
-    return render_template("admin/taobao_detail.html", form=form,taobao=taobao)
+    return render_template("admin/taobao_detail.html", form=form, taobao=taobao)
+
 
 @admin.route("/taobao/del/<int:id>", methods=["GET"])
 @admin_login_req
@@ -894,3 +898,30 @@ def taobao_del(id=None):
     db.session.commit()
     flash("删除数据成功！", "ok")
     return redirect(url_for('admin.taobao_list', page=1))
+
+
+# 上传到wish
+@admin.route('/wish/add', methods=['GET', 'POST'])
+@admin_login_req
+def wish_add(id=None):
+    form = WishForm()
+    if form.validate_on_submit():
+        print('bbbbb')
+        data = form.data
+        dic = {}
+        for k in data:
+            if k != 'submit' and k != 'csrf_token':
+                dic[k] = data.get(k)
+                print(k)
+                print(data.get(k))
+        # dic['main_image']='https://cbu01.alicdn.com/img/ibank/2017/546/759/5324957645_905196960.400x400.jpg'
+        # dic['extra_images']='https://cbu01.alicdn.com/img/ibank/2017/517/684/5311486715_905196960.60x60.jpg|https://cbu01.alicdn.com/img/ibank/2017/234/373/5301373432_905196960.60x60.jpg'  # 其他图片
+
+        print(dic)
+        from app.util.wish_op import add_product
+        add_product(dic)  # 上传产品
+
+        # db.session.add(useful_taobao)
+        # db.session.commit()
+        flash("产品上传成功！", "ok")
+    return render_template("admin/wish_add.html", form=form)
