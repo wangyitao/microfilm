@@ -6,8 +6,23 @@ import requests
 import random
 import json
 
+def from_lang(content):
+    if str(content).strip():
+        return ''
+    try:
+        datas = {
+            'query': content,
+        }
+        fromlang = json.loads(requests.post('http://fanyi.baidu.com/langdetect', data=datas).text)['lan']
+        # print(fromlang)
+        return fromlang
+    except Exception as e:
+        print(e)
+
 
 def translate(content, tolang='zh', fromlang=None):
+    if str(content).strip():
+        return ''
     User_Agent = [
         'Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Mobile Safari/537.36',
         'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Mobile Safari/537.36',
@@ -36,7 +51,10 @@ def translate(content, tolang='zh', fromlang=None):
         res = requests.post(url=url, data=data, headers=headers)
         # print(res.text)
         result = json.loads(res.text)
+
         return result['trans'][0]['dst']
+
+
     except Exception as e:
         print('翻译出错')
         print(e)

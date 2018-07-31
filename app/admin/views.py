@@ -20,6 +20,8 @@ from app.models import Admin, Tag, Movie, Preview, User, Comment, Moviecol, Auth
 from . import admin
 
 
+# YINHEyinheark123
+
 # 装饰器做登录验证
 def admin_login_req(func):
     """
@@ -905,6 +907,14 @@ def taobao_del(id=None):
 @admin_login_req
 def wish_add(id=None):
     form = WishForm()
+
+    form.color.validators.clear()
+    form.size.validators.clear()
+    tags = Tag.query.order_by(  # 查询并按照时间排序
+        Tag.addtime.desc()
+    )
+    for tag in tags:
+        print(tag)
     if form.validate_on_submit():
         print('bbbbb')
         data = form.data
@@ -924,4 +934,33 @@ def wish_add(id=None):
         # db.session.add(useful_taobao)
         # db.session.commit()
         flash("产品上传成功！", "ok")
-    return render_template("admin/wish_add.html", form=form)
+    return render_template("admin/wish_add.html", form=form, tags=tags)
+
+
+# 使用的是ajax
+@admin.route("/tran/<int:type>", methods=["GET"])
+# @user_login_req
+def translate2(type=0):
+    """
+    翻译
+    """
+    import json
+    from app.util.translate import translate, from_lang
+    sstr = request.args.get("sstr", "")  # 接收ajax的消息
+    print(sstr, 'sstr')
+    if not str(sstr).strip():
+        return json.dumps({'tran': ''})
+
+    if type == 0:
+        tran = translate(str(sstr), 'en', 'zh')
+        tran = str(tran).replace(',', ' ').replace('.', ' ').replace('，', ' ').replace('。', ' ')
+
+        return json.dumps({'tran': tran})
+    if type == 1:
+        strs = str(sstr).split(',')
+        zhs=[i for i in strs if from_lang(i) == 'zh']
+        for z in zhs:
+            strs[strs.index(z)]=translate(z,'en','zh').replace(',', ' ').replace('.', ' ').replace('，', ' ').replace('。', ' ')
+        return json.dumps({'tran': ','.join(strs)})
+
+

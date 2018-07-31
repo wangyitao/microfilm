@@ -556,6 +556,8 @@ class WishForm(FlaskForm):
         description="产品标签",
         render_kw={
             "class": "form-control",
+            "id": "pro_tag",
+            # "onchange" : "tag_num()",
             # "id": "input_name4",
             "placeholder": "输入标签名"
         }
@@ -585,7 +587,7 @@ class WishForm(FlaskForm):
         }
     )
     price = FloatField(
-        label="产品价格",
+        label="产品实际价格",
         validators=[
             DataRequired("产品价格")
         ],
@@ -593,10 +595,22 @@ class WishForm(FlaskForm):
         render_kw={
             "class": "form-control",
             # "id": "input_name4",
-            "placeholder": "输入产品价格"
+            "placeholder": "输入产品实际价格"
         }
     )
-    main_image= StringField(
+    msrp = FloatField(
+        label="产品建议零售价",
+        validators=[
+            DataRequired("产品价格")
+        ],
+        description="产品价格",
+        render_kw={
+            "class": "form-control",
+            # "id": "input_name4",
+            "placeholder": "输入建议零售价"
+        }
+    )
+    main_image = StringField(
         label="主图地址",
         validators=[
             DataRequired("主图地址")
@@ -608,7 +622,7 @@ class WishForm(FlaskForm):
             "placeholder": "输入主图地址"
         }
     )
-    extra_images=StringField(
+    extra_images = StringField(
         label="附图地址",
         validators=[
             DataRequired("附图地址")
@@ -620,7 +634,7 @@ class WishForm(FlaskForm):
             "placeholder": "输入附图地址，多张附图用|隔开"
         }
     )
-    shipping_time=StringField(
+    shipping_time = StringField(
         label="运送时间",
         validators=[
             DataRequired("运送时间")
@@ -632,7 +646,7 @@ class WishForm(FlaskForm):
             "placeholder": "输入运送时间，例如：5-10"
         }
     )
-    color=StringField(
+    color = StringField(
         label="产品颜色",
         validators=[
             DataRequired("产品颜色")
@@ -641,10 +655,10 @@ class WishForm(FlaskForm):
         render_kw={
             "class": "form-control",
             "id": "pro_color",
-            "placeholder": "输入产品颜色，例如：red,blue,green  用英文输入法下的,隔开"
+            "placeholder": "输入产品颜色，例如：red,blue,green  用英文输入法下的,隔开,可以为空"
         }
     )
-    size=StringField(
+    size = StringField(
         label="产品尺寸",
         validators=[
             DataRequired("产品尺寸")
@@ -653,7 +667,7 @@ class WishForm(FlaskForm):
         render_kw={
             "class": "form-control",
             "id": "pro_size",
-            "placeholder": "输入产品颜色，例如：Large, Medium, Small, 5, 6, 7.5  用英文输入法下的,隔开"
+            "placeholder": "输入产品颜色，例如：Large, Medium, Small, 5, 6, 7.5  用英文输入法下的,隔开，可以为空"
         }
     )
     submit = SubmitField(

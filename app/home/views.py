@@ -269,6 +269,7 @@ def moviecol_add():
 @home.route("/<int:page>/", methods=["GET"])
 @home.route("/", methods=["GET"])
 def index(page=None):
+    return redirect('http://www.yinheark.com/')
     """
     首页电影列表
     """

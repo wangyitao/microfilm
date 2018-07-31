@@ -35,7 +35,9 @@
                         </div>
                         {% endfor %}
                         <div class="form-group">
-                            <label for="input_name">{{form.name.label}}<span><span style="color:red" onclick="replaceStr()">一键首字母大写</span></span></label>
+                            <label for="input_name">{{form.name.label}} <span><span style="color:red"
+                                                                                    onclick="replaceStr()">一键首字母大写    </span><span
+                                    style="color:red" onclick="translate2(0)">    一键翻译</span></span></label>
                             <div>{{form.name}}</div>
 
                             <label for="input_name">{{form.sku.label}}<span><span style="color:red" onclick="Showsku()">一键生成sku</span></span></label>
@@ -46,10 +48,23 @@
                             <div>{{form.parent_sku}}</div>
                             <label for="input_name">{{form.price.label}}</label>
                             <div>{{form.price}}</div>
+                            <label for="input_name">{{form.msrp.label}}</label>
+                            <div>{{form.msrp}}</div>
                             <label for="input_name">{{form.description.label}}</label>
                             <div>{{form.description}}</div>
-                            <label for="input_name">{{form.tags.label}}</label>
+                            <label for="input_name">{{form.tags.label}}
+                                </span><span style="color:red" onclick="translate2(1)">    一键翻译</span></span>
+                                </span><span style="color:black" onclick="tag_num()">当前标签个数:<span id="tag_num"></span>个</span></span>
+                            </label>
                             <div>{{form.tags}}</div>
+
+                            <div>
+                                {%for v in tags%}
+                                <span class="btn btn-default" onclick="tags_in(this)">{{v.name}}
+                                        </span>
+                                {%endfor%}
+                            </div>
+
                             <label for="input_name">{{form.inventory.label}}</label>
                             <div>{{form.inventory}}</div>
                             <label for="input_name">{{form.shipping.label}}</label>
@@ -84,6 +99,8 @@
                 {{ form.csrf_token }}
                 {{ form.submit }}
             </div>
+
+
             </form>
         </div>
     </div>
@@ -113,6 +130,19 @@
         }
     }
 
+
+    function tag_num() {
+        var tag_tmp = $("#pro_tag").val();
+        var tags = tag_tmp.split(',');
+        if (tags[0] == '' && tags.length == 1) {
+            $("#tag_num").html(0);
+        } else {
+            $("#tag_num").html(tags.length);
+        }
+
+        // alert('标签个数:' + tags.length + '个')
+    }
+
     function Showsku() {
         var ParentSKU = document.getElementById("ParentSKU").value;
         var size = document.getElementById("pro_size").value;
@@ -124,8 +154,76 @@
         $("#pro_sku").val(sku);
     }
 
+    function tags_in(e) {
+        var tag = e.innerText;
+        var tag_tmp = $("#pro_tag").val();
+        var tags = tag_tmp.split(',');
+        var index = tags.indexOf(tag);
+        if (tag_tmp == '') {
+            $("#pro_tag").val(tag);
+        } else {
+            if (index == -1) {
+                tags.push(tag);
+                var strs = tags.join(',');
+                $("#pro_tag").val(strs);
+            } else {
+                tags.splice(index, 1);
+                var strs = tags.join(',');
+                $("#pro_tag").val(strs);
+            }
+        }
+
+
+        // alert(tag_tmp)
+    }
+
+    function translate2(type) {
+        if (type == 0) {
+            var str = document.getElementById("pro_name").value;
+
+            $.ajax({
+                url: "{{ url_for('admin.translate2',type=0) }}",
+                type: "GET",
+                data: "sstr=" + str,
+                dataType: "json",
+                success: function (res) {
+                    $("#pro_name").val(res.tran);
+                }
+            });
+        } else if (type == 1) {
+            var str = document.getElementById("pro_tag").value;
+
+            $.ajax({
+                url: "{{ url_for('admin.translate2',type=1) }}",
+                type: "GET",
+                data: "sstr=" + str,
+                dataType: "json",
+                success: function (res) {
+
+                    $("#pro_tag").val(res.tran);
+                }
+            });
+        }
+
+    }
+
+    // function translate3() {
+    //     var str = document.getElementById("pro_tag").value;
+    //
+    //     $.ajax({
+    //         url: "{{ url_for('admin.translate2',type=1) }}",
+    //         type: "GET",
+    //         data: "sstr=" + str,
+    //         dataType: "json",
+    //         success: function (res) {
+    //
+    //             $("#pro_tag").val(res.tran.split(' ').join(','));
+    //         }
+    //     });
+    // }
+
     function replaceStr() {
-        var str=document.getElementById("pro_name").value;
+        var str = document.getElementById("pro_name").value;
         var strTemp = ""; //新字符串
         for (var i = 0; i < str.length; i++) {
             if (i == 0) {
